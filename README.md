@@ -125,38 +125,45 @@
     - 실행화면
     - ![screemsh_step8_2](./img/Step8_2.png)![screemsh_step8_3](./img/Step8_3.png)![screemsh_step8_4](./img/Step8_4.png)
 
-  \- 선택한 사진을 받기 위해서 구현해야 하는 메서드는 어떤게 있는지 찾아 구현한다.
+  - 선택한 사진을 받기 위해서 구현해야 하는 메서드는 어떤게 있는지 찾아 구현한다.
       1. UIImagePickerController 인스턴스 생성과 UIImagePickerController 델리게이트 구성
-      ```swift
-        @IBAction func selectButtonTouched(_ sender: Any) {
-            let imagePicker = UIImagePickerController() //UIImagePickerController 인스턴스 생성
-            imagePicker.sourceType = .photoLibrary //sourceType 설정
-            imagePicker.delegate = self //UIImagePickerController의 델리게이트 구성
-            present(imagePicker, animated: true, completion: nil)
-          }
-      ```
-        - 사용자가 UIImagePickerController의 인터페이스에서 이미지를 선택할 때, delegate는 ``UIImagePickerController(_:didFinishPickingMediaWithInfo:)``메세지를 받고, 취소를 누르면 ``imagePickerControllerDidCancel(_:)``메세지를 받는다. 지금과 같은 경우에는, ``SecondViewController``인스턴스가 이미지피커의 델리게이트가 된다.( 위 코드에서 ``imagePicker.delegate = self`` 부분)
-        - 추가적으로, ``SecondViewController``는 ``UINavigationController``과 ``UIImagePickerControllerDelegate`` 프로토콜을 적용해주어야 한다.
-          - ``UIImagePickerControllerDelegate``이 필요한 이유 :  ``UIImagePickerController``의 delegate프로퍼티는 실제로 그 상위 클래스인 ``UINavigationController``로부터 상속된 것이다. 하지만, ``UIImagePickerController``는 자기 소유의 델리게이트 프로토콜을 가진다.ㅏ 그 상속된 delegate프로퍼티는 ``UINavigationControllerDelegate``를 따르는 객체를 참조하도록 선언되어 있다.
-      2. 이미지 저장하여 넘겨주기
-      ```swift
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-          if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            let imagePickerView = UIImageView.init(image: image)
-            imagePickerView.contentMode = .scaleAspectFit
-            self.photoImageView.image = imagePickerView.image
-            dismiss(animated: true, completion: nil)
-          }
-        }
-      ```
-        - 위에서 ``UIImagePickerController``의 인터페이스에서 이미지를 선택할 때, delegate가 받는 ``UIImagePickerController(_:didFinishPickingMediaWithInfo:)`` 메세지를 수정한다. 이미지뷰로 선택한 사진을 불러온 후, 기존 설정에 맞게 ``contentMode``를 AspectFit으로 설정해준 후, 액자의 이미지에 넣어준다. 그 후, dismiss를 통해 화면을 닫아준다.
 
-  3. 학습꺼리  
+        ```swift
+          @IBAction func selectButtonTouched(_ sender: Any) {
+              let imagePicker = UIImagePickerController() //UIImagePickerController 인스턴스 생성
+              imagePicker.sourceType = .photoLibrary //sourceType 설정
+              imagePicker.delegate = self //UIImagePickerController의 델리게이트 구성
+              present(imagePicker, animated: true, completion: nil)
+            }
+        ```
+
+      - 사용자가 UIImagePickerController의 인터페이스에서 이미지를 선택할 때, delegate는 ``UIImagePickerController(_:didFinishPickingMediaWithInfo:)``메세지를 받고, 취소를 누르면 ``imagePickerControllerDidCancel(_:)``메세지를 받는다. 지금과 같은 경우에는, ``SecondViewController``인스턴스가 이미지피커의 델리게이트가 된다.( 위 코드에서 ``imagePicker.delegate = self`` 부분)
+
+      - 추가적으로, ``SecondViewController``는 ``UINavigationController``과 ``UIImagePickerControllerDelegate`` 프로토콜을 적용해주어야 한다.
+
+        - ``UIImagePickerControllerDelegate``이 필요한 이유 :  ``UIImagePickerController``의 delegate프로퍼티는 실제로 그 상위 클래스인 ``UINavigationController``로부터 상속된 것이다. 하지만, ``UIImagePickerController``는 자기 소유의 델리게이트 프로토콜을 가진다.ㅏ 그 상속된 delegate프로퍼티는 ``UINavigationControllerDelegate``를 따르는 객체를 참조하도록 선언되어 있다.
+
+      2. 이미지 저장하여 넘겨주기
+
+        ```swift
+          func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+              let imagePickerView = UIImageView.init(image: image)
+              imagePickerView.contentMode = .scaleAspectFit
+              self.photoImageView.image = imagePickerView.image
+              dismiss(animated: true, completion: nil)
+            }
+          }
+        ```
+
+      - 위에서 ``UIImagePickerController``의 인터페이스에서 이미지를 선택할 때, delegate가 받는 ``UIImagePickerController(_:didFinishPickingMediaWithInfo:)`` 메세지를 수정한다. 이미지뷰로 선택한 사진을 불러온 후, 기존 설정에 맞게 ``contentMode``를 AspectFit으로 설정해준 후, 액자의 이미지에 넣어준다. 그 후, dismiss를 통해 화면을 닫아준다.
+
+  - 학습꺼리  
     - 화면 요소들을 겹쳐서 디자인 하는 경우 z축으로 위-아래를 구분해서 학습한다.
     - UIImagePickerController처럼 이미 만들어놓은 시스템 컨트롤러들에 대해 학습한다.
       - https://developer.apple.com/documentation/uikit/view_controllers
     - 델리게이트(Delegate)와 프로토콜(Protocol) 상관 관계에 대해 학습한다.
-      - 델리게이트란? : **어떤 객체가 해야 하는 일을 부분적으로
-확장해서 대신 처리하는 것.** \*정의 : 대리자, 위임자
+      - 델리게이트란? : **어떤 객체가 해야 하는 일을 부분적으로 확장해서 대신 처리하는 것.** \*정의 : 대리자, 위임자
       - 델리게이트의 용도 : **대신 처리 해줄 객체** 와 **처리하라고 시키는 객체**
+
         - 이번 미션에서의 경우, 대신 처리 해줄 객체는 ``SecondViewController``이고, 처리하라고 시키는 객체는 select버튼이다. 위 코드에서 ``imagePicker.delegate = self`` 부분에 해당하고, ``SecondViewController``가 ``imagePickerController``이 해야할 일을 대신 처리하는 것이다. 대신 처리하기 위해서 2개의 Protocol(``UIImagePickerControllerDelegate``, ``UINavigationControllerDelegate``)을 적용시켜주는 것이고, 필요한 이유는 위 1번의 내용을 참고.
